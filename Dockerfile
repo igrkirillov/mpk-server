@@ -4,6 +4,9 @@ LABEL maintainer="Kirillova Darya"
 LABEL description="MPK Server"
 
 ENV HTTP_PORT 8080
+ENV DB_USER MPK
+ENV DB_PASSWORD MPK
+ENV DB_URL jdbc:postgresql://localhost:5432/postgres?currentSchema=mpk
 
 EXPOSE ${HTTP_PORT}
 
@@ -25,5 +28,8 @@ CMD [ "java", \
     "-XX:ErrorFile=/logs/java_error%p.log", \
     "-DlogPath=/app/logs", \
     "-Dfile.encoding=UTF8", \
-    "-DhttpPort=${HTTP_PORT}", \
+    "-DhttpPort=${PORT}", \
+    "-DdbUser=${DB_USER}", \
+    "-DdbPassword=${DB_PASSWORD}", \
+    "-DdbUrl=${DB_URL}", \
     "-jar", "/app/mpk-server-spring-boot.jar"]
