@@ -1,4 +1,4 @@
-package ru.x5.mpk.server.restapi.controllers.greeting;
+package ru.x5.mpk.server.restapi.controllers.mpkaddress;
 
 import lombok.Data;
 

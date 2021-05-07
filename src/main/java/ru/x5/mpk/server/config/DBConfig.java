@@ -1,4 +1,4 @@
-package ru.x5.mpk.server;
+package ru.x5.mpk.server.config;
 
 import org.postgresql.ds.PGPoolingDataSource;
 import org.springframework.beans.factory.annotation.Value;
