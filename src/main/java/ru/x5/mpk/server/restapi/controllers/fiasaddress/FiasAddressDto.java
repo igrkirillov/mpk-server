@@ -6,4 +6,5 @@ import lombok.Data;
 public class FiasAddressDto {
     private String fullName;
     private String fiasUid;
+    private String mpkUid;
 }
