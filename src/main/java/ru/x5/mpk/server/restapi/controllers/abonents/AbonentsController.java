@@ -1,70 +1,70 @@
-package ru.x5.mpk.server.restapi.controllers.mpkaddress;
+package ru.x5.mpk.server.restapi.controllers.abonents;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.x5.mpk.server.entities.Abonent;
 import ru.x5.mpk.server.entities.MpkAddress;
+import ru.x5.mpk.server.repositories.AbonentRepository;
 import ru.x5.mpk.server.repositories.MpkAddressRepository;
 import ru.x5.mpk.server.restapi.controllers.error.Message;
 import ru.x5.mpk.server.restapi.controllers.error.MessageAndErrors;
+import ru.x5.mpk.server.restapi.controllers.mpkaddress.MpkAddressDto;
+import ru.x5.mpk.server.services.mapstruct.AbonentMapper;
 import ru.x5.mpk.server.services.mapstruct.MpkAddressMapper;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@Api(value = "MpkAddress", tags = {"MpkAddress"}, description = "MpkAddress API")
-public class MpkAddressController {
+@Api(value = "Abonents", tags = {"Abonents"}, description = "Abonents API")
+public class AbonentsController {
 
     @Autowired
-    private MpkAddressRepository mpkAddressRepository;
+    private AbonentRepository abonentRepository;
     @Autowired
-    private MpkAddressMapper mpkAddressMapper;
+    private AbonentMapper abonentMapper;
 
-    @ApiOperation(value = "Получение адресов, удовлетворяющих критериям",
-            nickname = "getByCriteria", notes = "", response = MpkAddressDto.class, responseContainer = "List", tags={ "MpkAddress"})
+    @ApiOperation(value = "Получение абонентов, удовлетворяющих критериям",
+            nickname = "getByCriteria", notes = "", response = AbonentDto.class, responseContainer = "List", tags={ "Abonents"})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = MpkAddressDto.class, responseContainer = "List"),
+            @ApiResponse(code = 200, message = "OK", response = AbonentDto.class, responseContainer = "List"),
             @ApiResponse(code = 400, message = "Bad Request", response = MessageAndErrors.class),
             @ApiResponse(code = 422, message = "UnprocessableEntity", response = Message.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = MessageAndErrors.class) })
     @GetMapping(
-            value = "/mpkaddresses",
+            value = "/abonents",
             produces = { "application/json" }
     )
-    public List<MpkAddressDto> getList() {
-        return mpkAddressMapper.mapToDtoList(mpkAddressRepository.findAll());
+    public List<AbonentDto> getList() {
+        return abonentMapper.mapToDtoList(abonentRepository.findAll());
     }
 
-    @ApiOperation(value = "Создание MPKAddress", nickname = "create", notes = "", response = MpkAddressDto.class,
-            tags = {"MpkAddress"})
+    @ApiOperation(value = "Создание Abonent", nickname = "create", notes = "", response = AbonentDto.class,
+            tags = {"Abonents"})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = MpkAddressDto.class),
+            @ApiResponse(code = 200, message = "OK", response = AbonentDto.class),
             @ApiResponse(code = 400, message = "Bad Request", response = MessageAndErrors.class),
             @ApiResponse(code = 422, message = "UnprocessableEntity", response = Message.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = MessageAndErrors.class) })
     @PostMapping(
-            value = "/mpkaddresses",
+            value = "/abonents",
             produces = { "application/json" },
             consumes = { "application/json" }
     )
-    ResponseEntity<MpkAddressDto> create(@ApiParam(value = "" ,required=true )  @RequestBody MpkAddressCreationParameters creationParameters) {
-        MpkAddress entity = new MpkAddress();
+    ResponseEntity<AbonentDto> create(@ApiParam(value = "" ,required=true )  @RequestBody AbonentsCreationParameters creationParameters) {
+        Abonent entity = new Abonent();
         entity.setUid(UUID.randomUUID().toString());
-        entity.setFiasUid(creationParameters.getFiasUid());
         entity.setFullName(creationParameters.getFullName());
-        entity.setZip(creationParameters.getZip());
-        entity = mpkAddressRepository.saveAndFlush(entity);
-        return ResponseEntity.ok(mpkAddressMapper.mapToDto(entity));
+        entity = abonentRepository.saveAndFlush(entity);
+        return ResponseEntity.ok(abonentMapper.mapToDto(entity));
     }
 }

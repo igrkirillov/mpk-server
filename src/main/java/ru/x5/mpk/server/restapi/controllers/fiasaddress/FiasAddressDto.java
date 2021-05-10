@@ -7,4 +7,5 @@ public class FiasAddressDto {
     private String fullName;
     private String fiasUid;
     private String mpkUid;
+    private String zip;
 }
