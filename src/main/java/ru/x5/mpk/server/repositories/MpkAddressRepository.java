@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import ru.x5.mpk.server.entities.MpkAddress;
-import ru.x5.mpk.server.entities.TestEntity;
 
 import java.util.List;
 

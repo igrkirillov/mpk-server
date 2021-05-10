@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.x5.mpk.server.entities.Abonent;
 import ru.x5.mpk.server.entities.MpkAddress;
@@ -66,5 +67,20 @@ public class AbonentsController {
         entity.setFullName(creationParameters.getFullName());
         entity = abonentRepository.saveAndFlush(entity);
         return ResponseEntity.ok(abonentMapper.mapToDto(entity));
+    }
+
+    @ApiOperation(value = "Получение абонентов, привязанных к адресу",
+            nickname = "getLinkedToAddress", notes = "", response = AbonentDto.class, responseContainer = "List", tags={ "Abonents"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = AbonentDto.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Bad Request", response = MessageAndErrors.class),
+            @ApiResponse(code = 422, message = "UnprocessableEntity", response = Message.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = MessageAndErrors.class) })
+    @GetMapping(
+            value = "/abonents",
+            produces = { "application/json" }
+    )
+    public List<AbonentDto> getList(@RequestParam("mpkAddressUid") @ApiParam(value = "mpkAddressUid") String mpkAddressUid) {
+        return abonentMapper.mapToDtoList(abonentRepository.findAbonentsBy(mpkAddressUid));
     }
 }
