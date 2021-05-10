@@ -19,8 +19,11 @@ import ru.x5.mpk.server.services.fias.KladrClient;
 import ru.x5.mpk.server.services.mapstruct.FiasAddressMapper;
 import ru.x5.mpk.server.services.mapstruct.MpkAddressMapper;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,10 +52,16 @@ public class FiasAddressController {
     public List<FiasAddressDto> getList(
             @RequestParam("query") @ApiParam(value = "Пользовательский текст запроса", defaultValue = "Москва")
             String query) {
-        List<Address> addresses = kladrClient.suggest(query).getAddresses()
-                .stream()
-                .filter(a -> a.getContentType().equals(KladrClient.CONTENT_TYPE_BUILDING))
-                .collect(Collectors.toList());
+        List<Address> addresses;
+        String stubData = System.getProperty("stubData");
+        if (stubData != null && stubData.equals("1")) {
+            addresses = getStubData();
+        } else {
+            addresses = kladrClient.suggest(query).getAddresses()
+                    .stream()
+                    .filter(a -> a.getContentType().equals(KladrClient.CONTENT_TYPE_BUILDING))
+                    .collect(Collectors.toList());
+        }
         List<FiasAddressDto> fiasAddressDtoList = fiasAddressMapper.mapToDtoList(addresses);
         if (!fiasAddressDtoList.isEmpty()) {
             List<MpkAddress> mpkAddresses = mpkAddressRepository.findByFiasUidList(fiasAddressDtoList.stream()
@@ -68,5 +77,28 @@ public class FiasAddressController {
             });
         }
         return fiasAddressDtoList;
+    }
+
+    private List<Address> getStubData() {
+        List<Address> list = new ArrayList<>();
+        Address a1 = new Address();
+        a1.setContentType(KladrClient.CONTENT_TYPE_BUILDING);
+        a1.setZip("000001");
+        a1.setFullName("Москва город, Город Москва, Улица Зарайская 46 корпус 1");
+        a1.setUid(UUID.randomUUID().toString());
+
+        Address a2 = new Address();
+        a2.setContentType(KladrClient.CONTENT_TYPE_BUILDING);
+        a2.setZip("000002");
+        a2.setFullName("Москва город, Город Москва, Улица Зарайская 40");
+        a2.setUid(UUID.randomUUID().toString());
+
+        Address a3 = new Address();
+        a3.setContentType(KladrClient.CONTENT_TYPE_BUILDING);
+        a3.setZip("000001");
+        a3.setFullName("Москва город, Город Москва, Улица Зарайская 46");
+        a3.setUid(UUID.randomUUID().toString());
+
+        return Arrays.asList(a1, a2, a3);
     }
 }

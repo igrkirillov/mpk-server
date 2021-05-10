@@ -77,7 +77,7 @@ public class AbonentsController {
             @ApiResponse(code = 422, message = "UnprocessableEntity", response = Message.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = MessageAndErrors.class) })
     @GetMapping(
-            value = "/abonents",
+            value = "/abonents/links",
             produces = { "application/json" }
     )
     public List<AbonentDto> getList(@RequestParam("mpkAddressUid") @ApiParam(value = "mpkAddressUid") String mpkAddressUid) {

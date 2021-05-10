@@ -1,4 +1,5 @@
 ./build
+heroku container:login
 heroku container:push web --app=mpk-server
 heroku container:release web --app=mpk-server
 heroku ps:restart web --app=mpk-server
